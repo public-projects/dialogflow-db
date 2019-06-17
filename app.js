@@ -9,6 +9,7 @@ var cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var chatbotRouter = require('./routes/chatbot');
 
 var app = express();
 // chatbotdb
@@ -37,61 +38,18 @@ const DATABASE_NAME = "chatbotdb";
 // app.listen(3100, () => {
 MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
   if (error) {
-    console.log("error = ");
     console.log(error);
-
     throw error;
   }
-  console.log("after.... ");
   database = client.db(DATABASE_NAME);
   collection = database.collection("all");
   console.log("Connected to `" + DATABASE_NAME + "`!");
 });
 
-app.get("/chatbot/test", (request, response) => {
-  console.log("/chatbot/test server!");
-  response.send('testing nod server!');
-});
-
-app.get("/chatbot/del", (request, response) => {
-  console.log("/chatbot/del server!");
-  database.collection("all").deleteMany({});
-  response.send('deleting!');
-});
-
-app.post("/chatbot/find", (request, response) => {
-  console.log("/chatbot/find server!");
-  console.log("request.question = " + request.body.question);
-  // console.log( request);
-
-  // collection.findOne({ "question": "how do you feel?" }, (error, result) => {
-  collection.findOne({ "question": request.body.question }, (error, result) => {
-    if (error) {
-      return response.status(500).send(error);
-    }
-    response.send(result);
-  });
-});
-
-app.post("/chatbot/update", (request, response) => {
-  console.log("/chatbot/update server!");
-  // console.log("request.question = " + request.body.question);
-  console.log( 'request = ');
-  console.log( request.body.question);
-  console.log( request.body.answer);
-
-  // collection.findOne({ "question": "how do you feel?" }, (error, result) => {
-  collection.insertOne({ "question": request.body.question, "answer": request.body.answer }, (error, result) => {
-    if (error) {
-      return response.status(500).send(error);
-    }
-    response.send(result);
-  });
-});
-// });
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/chatbot', chatbotRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
