@@ -5,7 +5,7 @@ var database;
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   if (err) throw err;
-  res.send('users root');
+  res.send('users ');
 });
 router.get('/users-list', function (req, res, next) {
   return fs.readFile('./users-data.json', 'utf8', (err, usersData) => {
