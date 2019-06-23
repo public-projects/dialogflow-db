@@ -4,17 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 //cors
-var cors = require('cors')
+var cors = require('cors');
 
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var chatbotRouter = require('./routes/chatbot');
-
+var localFilesRouter = require('./routes/local-files');
 var app = express();
 // chatbotdb
 const BodyParser = require("body-parser");
-const MongoClient = require("mongodb").MongoClient;
+var RandomUser = require('randomuser');
 
 app.use(cors())
 // view engine setup
@@ -30,12 +30,7 @@ app.use(BodyParser.urlencoded({ extended: false }));
 app.use(BodyParser.json());
 
 
-var url = "mongodb://localhost:27017/chatbotdb";
-// mongodb+srv://sk:<password>@cluster0-elylp.mongodb.net/test?retryWrites=true&w=majority
-const CONNECTION_URL = "mongodb+srv://sk:project0751@cluster0-elylp.mongodb.net/test?retryWrites=true&w=majority";
-const DATABASE_NAME = "chatbotdb";
 
-// app.listen(3100, () => {
 MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
   if (error) {
     console.log(error);
@@ -45,11 +40,20 @@ MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) =
   collection = database.collection("all");
   console.log("Connected to `" + DATABASE_NAME + "`!");
 });
+// build Random user db
+const r = new RandomUser();
+const fs = require('fs');
 
+r.getUsers({ seed: "abc", results: 5000, inc: "name,gender, email, picture" }, function (data) {
+  fs.writeFile('users-data.json', JSON.stringify(data), function (err) {
+    if (err) throw err;
+  });
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/chatbot', chatbotRouter);
+app.use('/local-files', localFilesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
