@@ -9,11 +9,11 @@
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "~4.18.2",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mongodb": "^3.2.7",
     "morgan": "~1.9.1",
-    "randomuser": "^1.1.0"
+    "randomuser": "^1.2.2"
   }
 }
